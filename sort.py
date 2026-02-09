@@ -1,3 +1,6 @@
+import argparse
+import sys
+
 from enum import auto, StrEnum
 from typing import Final
 
@@ -59,4 +62,22 @@ def sort(
     if mass >= MASS_THRESHOLD_KG:
         is_heavy = True
 
-    return _get_package(is_bulky, is_heavy).value
+    return _get_package(is_bulky, is_heavy).value.upper()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Package Sorter CLI")
+
+    parser.add_argument("--length", type=float, required=True, help="Length in cm")
+    parser.add_argument("--width", type=float, required=True, help="Width in cm")
+    parser.add_argument("--height", type=float, required=True, help="Height in cm")
+    parser.add_argument("--mass", type=float, required=True, help="Mass in kg")
+
+    args = parser.parse_args()
+
+    try:
+        print(
+            sort(args.length, args.width, args.height, args.mass)
+        )
+    except ValueError as err:
+        print("Error: invalid input. ", err)
+        sys.exit(1)
